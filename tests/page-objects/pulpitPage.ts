@@ -12,6 +12,8 @@ export class PulpitPage {
     readonly continueTransferButton: Locator;
     readonly confirmationAlertForQuickPayment: Locator;
     readonly closeTransferButton: Locator;
+    readonly moneyValue: Locator;
+    readonly decimalValue: Locator;
     
     constructor( page: Page) {
         this.page = page;
@@ -24,6 +26,8 @@ export class PulpitPage {
         this.titleOfTransferInput = page.locator('#widget_1_transfer_title');
         this.continueTransferButton = page.locator('#execute_btn');
         this.closeTransferButton = page.locator('[data-testid="close-button"]')
+        this.moneyValue = page.locator('#money_value');
+        this.decimalValue = page.locator('#decimal_value');
     
     }
 
@@ -69,6 +73,17 @@ export class PulpitPage {
 
     async clickCloseTransferButton(): Promise<void> {
         await this.closeTransferButton.click();
+    }
+
+    async getSaldo(): Promise<number> {
+        const moneyStartValueText = await this.moneyValue.textContent();
+        const moneyStartDecimalPlaceValueText = await this.decimalValue.textContent();
+
+        const moneyStartValue = parseInt(moneyStartValueText?.replace(/\D/g, '') || '0', 10);
+        const moneyDecimalValue = parseInt(moneyStartDecimalPlaceValueText?.replace(/\D/g, '') || '0', 10);
+
+        const moneyFullSaldo = moneyStartValue + moneyDecimalValue / 100;
+        return moneyFullSaldo;
     }
     
 }

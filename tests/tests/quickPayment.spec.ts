@@ -6,7 +6,7 @@ import { loginData, transferReceivers } from '../test-data/login.data';
 let loginPage: LoginPage;
 let pulpitPage: PulpitPage;
 
-const cashAmount = (Math.random() * 999 + 1).toFixed(2);
+const cashAmount = parseFloat((Math.random() * 999 + 1).toFixed(2));
 const paymentTile = "Test";
 
 test.describe('Quick payment and verification of saldo', () => {
@@ -19,24 +19,37 @@ test.describe('Quick payment and verification of saldo', () => {
         await loginPage.fillLoginAndPasswordAndClickContinueButton(loginData.userId, loginData.userPassword);
     });
 
-    test('Quick payment and verification of saldo', async ({ page }) => {
+    test('Quick payment and verification of saldo', async () => {
+
+        const bankSaldo = await pulpitPage.getSaldo();
+        const bankSaldoRounded = parseFloat(bankSaldo.toFixed(2));
+        const expectedBankSaldoAfterPayment = (bankSaldoRounded - cashAmount).toFixed(2);
+        console.log('Initial bank account: ', bankSaldoRounded);
 
         await pulpitPage.selectTransferReceiver(transferReceivers.receiver1);
 
         const selectedLabel = await pulpitPage.getSelectedTransferReceiver();
         await expect(selectedLabel).toBe('Jan Demobankowy');
 
-        await pulpitPage.inputValueCashAmount(cashAmount);
-        await expect(pulpitPage.transferAmountInput).toHaveValue(cashAmount);
+        const cashAmountString = cashAmount.toFixed(2);
+        await pulpitPage.inputValueCashAmount(cashAmountString);
+        await expect(pulpitPage.transferAmountInput).toHaveValue(cashAmountString);
+        console.log('User Transfer ', cashAmountString);
 
         await pulpitPage.inputTitleOfTransfer(paymentTile);
         await expect(pulpitPage.titleOfTransferInput).toHaveValue(paymentTile);
 
-        // If we need to debug, we can user console.log to check what is "stored" in the logs
+
         console.log('Title of payment:', paymentTile);
 
         await pulpitPage.clickQuickPaymentButton();
         await pulpitPage.clickCloseTransferButton();
-        
+
+        const updatedSaldo = await pulpitPage.getSaldo();
+        const updatedSaldoRounded = parseFloat(updatedSaldo.toFixed(2));
+        console.log('Updated Saldo: ', updatedSaldoRounded);
+
+        expect(updatedSaldoRounded).toBe(parseFloat(expectedBankSaldoAfterPayment));
+
     });
 });
