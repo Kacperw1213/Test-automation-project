@@ -23,7 +23,7 @@ test.describe('Quick payment and verification of saldo', () => {
 
         const bankSaldo = await pulpitPage.getSaldo();
         const bankSaldoRounded = parseFloat(bankSaldo.toFixed(2));
-        const expectedBankSaldoAfterPayment = (bankSaldoRounded - cashAmount).toFixed(2);
+        const expectedBankSaldoAfterPayment = parseFloat((bankSaldoRounded - cashAmount).toFixed(2));
         console.log('Initial bank account: ', bankSaldoRounded);
 
         await pulpitPage.selectTransferReceiver(transferReceivers.receiver1);
@@ -49,7 +49,7 @@ test.describe('Quick payment and verification of saldo', () => {
         const updatedSaldoRounded = parseFloat(updatedSaldo.toFixed(2));
         console.log('Updated Saldo: ', updatedSaldoRounded);
 
-        expect(updatedSaldoRounded).toBe(parseFloat(expectedBankSaldoAfterPayment));
+        expect(updatedSaldoRounded).toBe(expectedBankSaldoAfterPayment);
 
     });
 });
