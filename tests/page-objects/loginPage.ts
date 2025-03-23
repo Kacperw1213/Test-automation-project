@@ -11,7 +11,7 @@ export class LoginPage {
     constructor(page: Page) {
         this.page = page;
         this.loginInput = page.locator('[data-testid="login-input"]'); // By data-testid - specific HTML element
-        this.passwordInput = page.locator('#login_password') // By id
+        this.passwordInput = page.locator('#login_password'); // By id
         this.loginErrorMessage = page.locator('#error_login_id');
         this.passwordErrorMessage = page.locator('#error_login_password');
         this.continueButton = page.locator("#login-btn");

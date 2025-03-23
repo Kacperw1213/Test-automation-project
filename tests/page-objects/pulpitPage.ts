@@ -14,8 +14,9 @@ export class PulpitPage {
     readonly closeTransferButton: Locator;
     readonly moneyValue: Locator;
     readonly decimalValue: Locator;
-    
-    constructor( page: Page) {
+    readonly newTraditionalTransfer: Locator;
+
+    constructor(page: Page) {
         this.page = page;
         this.pageHeader = page.locator('#header_placeholder');
         this.quickPayment = page.locator('#quick_btn');
@@ -28,10 +29,11 @@ export class PulpitPage {
         this.closeTransferButton = page.locator('[data-testid="close-button"]')
         this.moneyValue = page.locator('#money_value');
         this.decimalValue = page.locator('#decimal_value');
-    
+        this.newTraditionalTransfer = page.locator('#payments_btn');
+
     }
 
-    async waitUntilLoaded(): Promise<void>{
+    async waitUntilLoaded(): Promise<void> {
         await this.pageHeader.waitFor();
     }
 
@@ -85,5 +87,9 @@ export class PulpitPage {
         const moneyFullSaldo = moneyStartValue + moneyDecimalValue / 100;
         return moneyFullSaldo;
     }
-    
+
+    async clickNewTransfer(): Promise<void> {
+        await this.newTraditionalTransfer.click();
+    }
+
 }

@@ -26,10 +26,10 @@ test.describe('Quick payment and verification of saldo', () => {
         const expectedBankSaldoAfterPayment = parseFloat((bankSaldoRounded - cashAmount).toFixed(2));
         console.log('Initial bank account: ', bankSaldoRounded);
 
-        await pulpitPage.selectTransferReceiver(transferReceivers.receiver1);
+        await pulpitPage.selectTransferReceiver(transferReceivers.receiver1.id);
 
         const selectedLabel = await pulpitPage.getSelectedTransferReceiver();
-        await expect(selectedLabel).toBe('Jan Demobankowy');
+        await expect(selectedLabel).toBe(transferReceivers.receiver1.name);
 
         const cashAmountString = cashAmount.toFixed(2);
         await pulpitPage.inputValueCashAmount(cashAmountString);
